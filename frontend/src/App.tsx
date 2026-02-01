@@ -1,23 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import Layout from './components/Layout'
+import Dashboard from './pages/Dashboard'
+import DataCenter from './pages/DataCenter'
+import Screening from './pages/Screening'
+import Patterns from './pages/Patterns'
+import Strategies from './pages/Strategies'
+import Backtest from './pages/Backtest'
+import Visual from './pages/Visual'
+import Settings from './pages/Settings'
+import SystemLogs from './pages/SystemLogs'
+import Login from './pages/Login'
 
 function App() {
-    const [count, setCount] = useState(0)
+    const [token, setToken] = useState(() => localStorage.getItem('momentum_token'))
+
+    useEffect(() => {
+        const syncToken = () => {
+            setToken(localStorage.getItem('momentum_token'))
+        }
+
+        // Listen for standard storage events (cross-tab)
+        window.addEventListener('storage', syncToken)
+        // Listen for custom auth events (same-tab)
+        window.addEventListener('momentum-auth', syncToken)
+
+        return () => {
+            window.removeEventListener('storage', syncToken)
+            window.removeEventListener('momentum-auth', syncToken)
+        }
+    }, [])
 
     return (
-        <div className="flex h-screen items-center justify-center bg-background text-foreground">
-            <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight">Momentum</h1>
-                <p className="text-lg text-muted-foreground">A-Share Visual Stock Selection & Quantitative Trading System</p>
-                <div className="mt-8">
-                    <button
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
-                        onClick={() => setCount((count) => count + 1)}
-                    >
-                        Count is {count}
-                    </button>
-                </div>
-            </div>
-        </div>
+        <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={token ? <Outlet /> : <Navigate to="/login" replace />}>
+                <Route element={<Layout />}>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/data" element={<DataCenter />} />
+                    <Route path="/screening" element={<Screening />} />
+                    <Route path="/patterns" element={<Patterns />} />
+                    <Route path="/strategies" element={<Strategies />} />
+                    <Route path="/backtest" element={<Backtest />} />
+                    <Route path="/visual" element={<Visual />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/logs" element={<SystemLogs />} />
+                </Route>
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
     )
 }
 
