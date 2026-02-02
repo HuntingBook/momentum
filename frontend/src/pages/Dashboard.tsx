@@ -123,9 +123,8 @@ export default function Dashboard() {
                     return (
                         <div
                             key={item.label}
-                            className="group relative overflow-hidden rounded-2xl bg-white border border-slate-200/60 p-5 shadow-sm hover:shadow-lg transition-all duration-300"
+                            className="group relative overflow-hidden rounded-2xl bg-white border border-slate-200/60 p-5 shadow-sm hover:shadow-lg transition-shadow duration-300"
                         >
-                            <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
                             <div className="relative z-10">
                                 <div className="flex items-center justify-between">
                                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{item.label}</p>
@@ -134,7 +133,7 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                                 <div className="mt-4">
-                                    <span className={`text-3xl font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}>
+                                    <span className={`text-3xl font-bold ${item.iconColor}`}>
                                         {item.value}
                                     </span>
                                 </div>
